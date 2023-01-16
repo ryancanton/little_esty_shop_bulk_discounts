@@ -6,9 +6,9 @@ RSpec.describe 'The Bulk Discount New Page' do
 
     visit new_merchant_bulk_discount_path(merchant.id)
 
-    fill_in 'Percentage Discount', with: '20'
-    fill_in 'Quantity Threshold', with: '15'
-    click_button 'Submit'
+    fill_in :percentage_discount, with: '20'
+    fill_in :quantity_threshold, with: '15'
+    click_button 'Save'
 
     expect(current_path).to eq(merchant_bulk_discounts_path(merchant.id))
     expect(page).to have_content('20')
