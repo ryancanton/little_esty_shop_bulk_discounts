@@ -56,4 +56,26 @@ RSpec.describe 'A Merchants Bulk Discounts Index Page' do
 
     expect(page).to have_link('Create New Bulk Discount', href: new_merchant_bulk_discount_path(merchant1.id))
   end
+
+  it 'each discount has a link to delete it' do
+    merchant1 = Merchant.create!(name: 'Hair Care')
+    bulk_discount_1 = merchant1.bulk_discounts.create!(percentage_discount: 25, quantity_threshold: 30)
+    bulk_discount_2 = merchant1.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 15)
+    
+    visit merchant_bulk_discounts_path(merchant1)
+
+    within "div#bulk_discount#{bulk_discount_2.id}" do
+      expect(page).to have_link('Delete')
+    end
+    within "div#bulk_discount#{bulk_discount_1.id}" do
+      expect(page).to have_link('Delete')
+      click_link('Delete')
+    end
+
+    expect(current_path).to eq(merchant_bulk_discounts_path(merchant1))
+    expect(page).to have_no_content('25')
+    expect(page).to have_no_content('30')
+    expect(page).to have_content('10')
+    expect(page).to have_content('15')
+  end
 end
