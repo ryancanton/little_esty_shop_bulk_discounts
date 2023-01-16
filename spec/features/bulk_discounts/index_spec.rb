@@ -48,4 +48,12 @@ RSpec.describe 'A Merchants Bulk Discounts Index Page' do
       expect(page).to have_link('Discount Show Page', href: merchant_bulk_discount_path(merchant1.id, bulk_discount_2.id))
     end
   end
+
+  it 'contains a link to create a new discount' do
+    merchant1 = Merchant.create!(name: 'Hair Care')
+
+    visit merchant_bulk_discounts_path(merchant1)
+
+    expect(page).to have_link('Create New Bulk Discount', new_merchant_bulk_discount(merchant1.id))
+  end
 end
