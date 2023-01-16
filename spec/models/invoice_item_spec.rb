@@ -18,13 +18,15 @@ RSpec.describe InvoiceItem, type: :model do
       it 'returns the price of an invoice item after applying the best possible discount' do
         m1 = Merchant.create!(name: 'Merchant 1')
         c1 = Customer.create!(first_name: 'Bilbo', last_name: 'Baggins')
-        item_1 = Item.create!(name: 'Shampoo', description: 'This washes your hair', unit_price: 10, merchant_id: @m1.id)
-        i1 = Invoice.create!(customer_id: @c1.id, status: 2)
-        ii_1 = InvoiceItem.create!(invoice_id: @i1.id, item_id: @item_1.id, quantity: 25, unit_price: 10, status: 0)
+        item_1 = Item.create!(name: 'Shampoo', description: 'This washes your hair', unit_price: 10, merchant_id: m1.id)
+        i1 = Invoice.create!(customer_id: c1.id, status: 2)
+        ii_1 = InvoiceItem.create!(invoice_id: i1.id, item_id: item_1.id, quantity: 25, unit_price: 10, status: 0)
+        ii_2 = InvoiceItem.create!(invoice_id: i1.id, item_id: item_1.id, quantity: 10, unit_price: 10, status: 0)
         bd1 = m1.bulk_discounts.create!(percentage_discount: 15, quantity_threshold: 20)
         bd2 = m1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 25)
 
         expect(ii_1.discounted_revenue).to eq(200)
+        expect(ii_2.discounted_revenue).to eq(100)
       end
     end
   end
