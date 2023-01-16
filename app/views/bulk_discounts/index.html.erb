@@ -1,0 +1,11 @@
+<h1>My Bulk Discounts</h1>
+<ol>
+  <% @bulk_discounts.each do |discount| %>
+    <div id="bulk_discount<%= discount.id %>">
+      <li>Quantity Threshold: <%= discount.quantity_threshold %> Percent Off: <%= discount.percentage_discount %>
+      <%= link_to "Discount Show Page", merchant_bulk_discount_path(@merchant.id, discount.id)%>
+      <%= link_to "Delete", "/merchant/#{@merchant.id}/bulk_discounts/#{discount.id}", method: :delete %>
+    </div>
+  <% end %>
+</ol>
+<%= link_to "Create New Bulk Discount", new_merchant_bulk_discount_path(@merchant.id) %>
