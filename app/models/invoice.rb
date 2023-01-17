@@ -13,4 +13,16 @@ class Invoice < ApplicationRecord
   def total_revenue
     invoice_items.sum("unit_price * quantity")
   end
+
+  def total_discounted_revenue
+    invoice_items.sum do |invoice_item|
+      invoice_item.discounted_revenue
+    end
+  end
+
+  def applied_discounts
+    discounts = invoice_items.map do |ii|
+      ii.item.merchant.bulk_discounts.where('quantity_threshold <= ?', ii.quantity).order(percentage_discount: :desc).limit(1)
+    end.flatten
+  end
 end
