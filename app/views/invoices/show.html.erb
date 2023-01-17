@@ -51,7 +51,7 @@
                                             <%= f.submit 'Update Invoice' %>
                                           <% end %></td>
             <% if i.applicable_discount? %>
-              <td style="text-align:center">$<%= link_to "Applied Discount #{i.applied_discount.id}", merchant_bulk_discount_path(i.applied_discount.merchant_id, i.applied_discount.id) %></td> 
+              <td style="text-align:center"><%= link_to "Applied Discount #{i.applied_discount.id}", merchant_bulk_discount_path(i.applied_discount.merchant_id, i.applied_discount.id) %></td> 
             <%end%> <br/>
           </tr>
         </section>
