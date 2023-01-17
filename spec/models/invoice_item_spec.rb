@@ -29,6 +29,53 @@ RSpec.describe InvoiceItem, type: :model do
         expect(ii_2.discounted_revenue).to eq(100)
       end
     end
+
+    describe "applied_discount" do
+      it 'returns the bulk_discount object applied to an invoice item, if any' do
+        m1 = Merchant.create!(name: 'Merchant 1')
+        c1 = Customer.create!(first_name: 'Bilbo', last_name: 'Baggins')
+        item_1 = Item.create!(name: 'Shampoo', description: 'This washes your hair', unit_price: 10, merchant_id: m1.id)
+        i1 = Invoice.create!(customer_id: c1.id, status: 2)
+        ii_1 = InvoiceItem.create!(invoice_id: i1.id, item_id: item_1.id, quantity: 25, unit_price: 10, status: 0)
+        ii_2 = InvoiceItem.create!(invoice_id: i1.id, item_id: item_1.id, quantity: 21, unit_price: 10, status: 0)
+        bd1 = m1.bulk_discounts.create!(percentage_discount: 15, quantity_threshold: 20)
+        bd2 = m1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 25)
+
+        expect(ii_1.applied_discount).to eq(bd2)
+        expect(ii_2.applied_discount).to eq(bd1)
+      end
+    end
+
+    describe "applicable_discount?" do
+      it 'returns true if a discount can be applied, false otherwise' do
+        m1 = Merchant.create!(name: 'Merchant 1')
+        c1 = Customer.create!(first_name: 'Bilbo', last_name: 'Baggins')
+        item_1 = Item.create!(name: 'Shampoo', description: 'This washes your hair', unit_price: 10, merchant_id: m1.id)
+        i1 = Invoice.create!(customer_id: c1.id, status: 2)
+        ii_1 = InvoiceItem.create!(invoice_id: i1.id, item_id: item_1.id, quantity: 25, unit_price: 10, status: 0)
+        ii_2 = InvoiceItem.create!(invoice_id: i1.id, item_id: item_1.id, quantity: 10, unit_price: 10, status: 0)
+        bd1 = m1.bulk_discounts.create!(percentage_discount: 15, quantity_threshold: 20)
+        bd2 = m1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 25)
+
+        expect(ii_1.applicable_discount?).to eq(true)
+        expect(ii_2.applicable_discount?).to eq(false)
+      end
+    end
+
+    describe "revenue" do
+      it 'returns the revenue before a discount is applied' do
+        m1 = Merchant.create!(name: 'Merchant 1')
+        c1 = Customer.create!(first_name: 'Bilbo', last_name: 'Baggins')
+        item_1 = Item.create!(name: 'Shampoo', description: 'This washes your hair', unit_price: 10, merchant_id: m1.id)
+        i1 = Invoice.create!(customer_id: c1.id, status: 2)
+        ii_1 = InvoiceItem.create!(invoice_id: i1.id, item_id: item_1.id, quantity: 25, unit_price: 10, status: 0)
+        ii_2 = InvoiceItem.create!(invoice_id: i1.id, item_id: item_1.id, quantity: 10, unit_price: 10, status: 0)
+
+        expect(ii_1.revenue).to eq(250)
+        expect(ii_2.revenue).to eq(100)
+      end
+    end
+
   end
   describe "class methods" do
     before(:each) do

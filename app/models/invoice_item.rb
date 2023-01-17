@@ -15,13 +15,23 @@ class InvoiceItem < ApplicationRecord
     Invoice.order(created_at: :asc).find(invoice_ids)
   end
 
+  def revenue
+    InvoiceItem.where(id: self.id).sum("unit_price * quantity")
+  end
+
+  def applied_discount
+    self.item.merchant.bulk_discounts.where('quantity_threshold <= ?', self.quantity).order(percentage_discount: :desc).limit(1)[0]
+  end
+
+  def applicable_discount?
+    self.item.merchant.bulk_discounts.where('quantity_threshold <= ?', self.quantity).order(percentage_discount: :desc).limit(1).length > 0
+  end
+
   def discounted_revenue
-    merchant = self.item.merchant
-    best_discount = merchant.bulk_discounts.where('quantity_threshold <= ?', self.quantity).order(percentage_discount: :desc).limit(1)
-    if (best_discount.length > 0)
-      discounted_revenue = (self.quantity * self.unit_price) - (self.quantity * self.unit_price) * (best_discount[0].percentage_discount / 100.0)
+    if (applicable_discount?)
+      discounted_revenue = revenue * ((100 - applied_discount.percentage_discount) / 100.0)
     else 
-      discounted_revenue = (self.quantity * self.unit_price)
+      discounted_revenue = revenue
     end
   end
 end
