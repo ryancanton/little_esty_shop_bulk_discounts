@@ -21,6 +21,8 @@ class Invoice < ApplicationRecord
   end
 
   def applied_discounts
-    
+    discounts = invoice_items.map do |ii|
+      ii.item.merchant.bulk_discounts.where('quantity_threshold <= ?', ii.quantity).order(percentage_discount: :desc).limit(1)
+    end.flatten
   end
 end

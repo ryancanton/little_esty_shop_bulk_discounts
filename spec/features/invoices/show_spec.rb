@@ -51,8 +51,8 @@ RSpec.describe 'invoices show' do
     @transaction7 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_7.id)
     @transaction8 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_8.id)
 
-    @bd_1 = @merchant1.bulk_discounts.create!(percentage_discount: 20, quantity: 5)
-    @bd_2 = @merchant1.bulk_discounts.create!(percentage_discount: 20, quantity: 10)
+    @bd_1 = @merchant1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 5)
+    @bd_2 = @merchant1.bulk_discounts.create!(percentage_discount: 25, quantity_threshold: 10)
   end
 
   it "shows the invoice information" do
@@ -112,7 +112,7 @@ RSpec.describe 'invoices show' do
   it "Contains a link to the applied bulk discounts show page(if any)" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
 
-    expect(page).to have_link("Applied Discount #{@bd_1.id}", href: merchant_bulk_discount(@merchant1.id, @bd_1.id))
-    expect(page).to have_link("Applied Discount #{@bd_2.id}", href: merchant_bulk_discount(@merchant1.id, @bd_2.id))
+    expect(page).to have_link("Applied Discount #{@bd_1.id}", href: merchant_bulk_discount_path(@merchant1.id, @bd_1.id))
+    expect(page).to have_link("Applied Discount #{@bd_2.id}", href: merchant_bulk_discount_path(@merchant1.id, @bd_2.id))
   end
 end

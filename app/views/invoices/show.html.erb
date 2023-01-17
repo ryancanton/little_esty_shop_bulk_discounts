@@ -22,6 +22,9 @@
   <p> Created on: <%= @invoice.created_at.strftime("%A, %B %-d, %Y") %></p>
   <p>Total Revenue: <%= @invoice.total_revenue %></p>
   <p>Discounted Revenue: <%= @invoice.total_discounted_revenue %></p>
+  <% @invoice.applied_discounts.each do |discount| %>
+    <%= link_to "Applied Discount #{discount.id}", merchant_bulk_discount_path(discount.merchant_id, discount.id)%>
+  <% end %>
 
 
   <h4>Customer:</h4>
