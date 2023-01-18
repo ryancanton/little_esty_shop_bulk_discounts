@@ -15,7 +15,9 @@ class Invoice < ApplicationRecord
   end
 
   def total_discounted_revenue 
-    
+    invoice_items.sum do |invoice_item|
+      invoice_item.discounted_revenue(invoice_item.item.merchant)
+    end
   end
 
   def merchant_total_revenue(merchant)
