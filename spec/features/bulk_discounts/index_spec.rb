@@ -78,4 +78,16 @@ RSpec.describe 'A Merchants Bulk Discounts Index Page' do
     expect(page).to have_content('10')
     expect(page).to have_content('15')
   end
+
+  it 'shows upcoming holidays' do
+    merchant1 = Merchant.create!(name: 'Hair Care')
+    visit merchant_bulk_discounts_path(merchant1)
+    get_url = HTTParty.get("https://date.nager.at/api/v3/NextPublicHolidays/US")
+    holidays = JSON.parse(get_url.body, symbolize_names: true)
+
+    
+    expect(page).to have_content("#{holidays.first[:localName]} on #{holidays.first[:date]}")
+    expect(page).to have_content("#{holidays.second[:localName]} on #{holidays.second[:date]}")
+    expect(page).to have_content("#{holidays.third[:localName]} on #{holidays.third[:date]}")
+  end
 end

@@ -9,3 +9,9 @@
   <% end %>
 </ol>
 <%= link_to "Create New Bulk Discount", new_merchant_bulk_discount_path(@merchant.id) %>
+
+<h3>Upcoming Holidays</h3>
+
+<p><%= @holidays.holiday_names[0] %> on <%= @holidays.holiday_dates[0] %></p>
+<p><%= @holidays.holiday_names[1] %> on <%= @holidays.holiday_dates[1] %></p>
+<p><%= @holidays.holiday_names[2] %> on <%= @holidays.holiday_dates[2] %></p>
