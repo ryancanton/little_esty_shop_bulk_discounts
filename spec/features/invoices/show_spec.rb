@@ -102,11 +102,11 @@ RSpec.describe 'invoices show' do
      end
   end
 
-  it "shows the total revenue and discounted revenue for the invoice" do
+  it "shows the total revenue and discounted revenue of the merchant for the invoice" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
 
-    expect(page).to have_content(@invoice_1.total_revenue)
-    expect(page).to have_content(@invoice_1.total_discounted_revenue)
+    expect(page).to have_content(@invoice_1.merchant_total_revenue(@merchant1))
+    expect(page).to have_content(@invoice_1.merchant_total_discounted_revenue(@merchant1))
   end
 
   it "Contains a link to the applied bulk discounts show page (if any) for each invoice item" do

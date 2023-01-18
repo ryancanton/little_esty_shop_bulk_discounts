@@ -25,8 +25,8 @@ RSpec.describe InvoiceItem, type: :model do
         bd1 = m1.bulk_discounts.create!(percentage_discount: 15, quantity_threshold: 20)
         bd2 = m1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 25)
 
-        expect(ii_1.discounted_revenue).to eq(200)
-        expect(ii_2.discounted_revenue).to eq(100)
+        expect(ii_1.discounted_revenue(m1)).to eq(200)
+        expect(ii_2.discounted_revenue(m1)).to eq(100)
       end
     end
 
@@ -41,8 +41,8 @@ RSpec.describe InvoiceItem, type: :model do
         bd1 = m1.bulk_discounts.create!(percentage_discount: 15, quantity_threshold: 20)
         bd2 = m1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 25)
 
-        expect(ii_1.applied_discount).to eq(bd2)
-        expect(ii_2.applied_discount).to eq(bd1)
+        expect(ii_1.applied_discount(m1)).to eq(bd2)
+        expect(ii_2.applied_discount(m1)).to eq(bd1)
       end
     end
 
@@ -57,8 +57,8 @@ RSpec.describe InvoiceItem, type: :model do
         bd1 = m1.bulk_discounts.create!(percentage_discount: 15, quantity_threshold: 20)
         bd2 = m1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 25)
 
-        expect(ii_1.applicable_discount?).to eq(true)
-        expect(ii_2.applicable_discount?).to eq(false)
+        expect(ii_1.applicable_discount?(m1)).to eq(true)
+        expect(ii_2.applicable_discount?(m1)).to eq(false)
       end
     end
 
